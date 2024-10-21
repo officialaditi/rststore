@@ -1,4 +1,13 @@
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+
 const App = () => {
-  return <h1>Hello world</h1>;
+  return (
+    <>
+      <Header />
+      <div style={{ height: "100px" }}></div>
+      <Footer />
+    </>
+  );
 };
 export default App;
