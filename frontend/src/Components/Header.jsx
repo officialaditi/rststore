@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Flex, Box, Heading, Icon, Link } from "@chakra-ui/react";
 import HeaderMenu from "./HeaderMenu";
 import { HiOutlineMenuAlt3, HiShoppingBag, HiUser } from "react-icons/hi";
+import { Link as RouterLink } from "react-router-dom";
 
 const Header = () => {
   const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ const Header = () => {
       top="0"
       left="0"
     >
-      <Link href="/">
+      <Link as={RouterLink} to="/">
         <Heading
           as="h1"
           color="whiteAlpha.800"
@@ -37,7 +38,7 @@ const Header = () => {
         <Icon as={HiOutlineMenuAlt3} mr="1" w="6" h="6" color="white" />
       </Box>
       <Box
-        display={{ md: "flex", base: show ? 'block': 'none' }}
+        display={{ md: "flex", base: show ? "block" : "none" }}
         width={{ base: "full", md: "auto" }}
         mt={{ base: "3", md: "0" }}
       >
