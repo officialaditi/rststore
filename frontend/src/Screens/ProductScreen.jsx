@@ -1,7 +1,20 @@
-import { Button, Flex, Grid, Heading, Image, Text } from "@chakra-ui/react";
-import { Route, Link as RouterLink, useParams } from "react-router-dom";
+import {
+  Button,
+  Flex,
+  Grid,
+  Heading,
+  Image,
+  Text,
+  Select,
+} from "@chakra-ui/react";
+import {
+  Route,
+  Link as RouterLink,
+  useParams,
+  useNavigate,
+} from "react-router-dom";
 import Rating from "../Components/Rating";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { singleProduct } from "../redux/actions/productAction";
 import Loader from "../Components/Loader";
@@ -10,6 +23,9 @@ import Message from "../Components/Message";
 const ProductScreen = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [qty, setQty] = useState(1);
 
   const singleProductDetail = useSelector((state) => state.singleProductDetail);
   const { loading, product, error } = singleProductDetail;
@@ -17,6 +33,10 @@ const ProductScreen = () => {
   useEffect(() => {
     dispatch(singleProduct(id));
   }, [id, dispatch]);
+
+  const addToCartHandler = () => {
+    navigate(`/cart/${id}?qty=${qty}`);
+  };
 
   return (
     <>
@@ -67,6 +87,20 @@ const ProductScreen = () => {
                 {product.countInStock > 0 ? "In Stock" : "Not available"}
               </Text>
             </Flex>
+            {product.countInStock > 0 && (
+              <Flex justifyContent="space-between" py="2">
+                <Text>Qty: </Text>
+                <Select
+                  value={qty}
+                  onChange={(e) => setQty(e.target.value)}
+                  width="30%"
+                >
+                  {[...Array(product.countInStock).keys()].map((i) => (
+                    <option key={i + 1}>{i + 1}</option>
+                  ))}
+                </Select>
+              </Flex>
+            )}
             <Button
               bg="gray.800"
               colorScheme="teal"
@@ -74,6 +108,7 @@ const ProductScreen = () => {
               textTransform="lowercase"
               letterSpacing="wide"
               isDisabled={product.countInStock === 0}
+              onClick={addToCartHandler}
             >
               Add to Cart
             </Button>
