@@ -3,6 +3,37 @@ import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 
 /**
+ *   @desc     Register form function new user
+ *   @route    POST ==> /api/users/
+ *   @access   PUBLIC
+ */
+
+const registerUser = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
+
+  const existUser = await User.findOne({ email });
+  if (existUser) {
+    res.status(400); // bad request
+    throw new Error("User Already Exist...");
+  }
+
+  const user = await User.create({ username, email, password });
+  if (user) {
+    //successfully created
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
+  }
+});
+/////////////////////////////////////////////////////////////////////////////
+/**
  *   @desc     Login form function
  *   @route    POST ==> /api/users/login
  *   @access   PUBLIC
@@ -25,7 +56,7 @@ const Login = asyncHandler(async (req, res) => {
     throw new Error("Invalid Email or Password");
   }
 });
-
+/////////////////////////////////////////////////////////////////////////////
 /**
  *   @desc     profile (user) function
  *   @route    GET ==> /api/users/profile
@@ -47,4 +78,4 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { Login, getUserProfile };
+export { Login, getUserProfile, registerUser };
