@@ -16,7 +16,6 @@ import { HiOutlineMenuAlt3, HiShoppingBag, HiUser } from "react-icons/hi";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { IoChevronDown } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-
 import { logout } from "../redux/actions/userAction";
 
 const Header = () => {
@@ -83,7 +82,9 @@ const Header = () => {
               {userInfo.username}
             </MenuButton>
             <MenuList>
-              <MenuItem as={RouterLink} to='/profile'>Profile</MenuItem>
+              <MenuItem as={RouterLink} to="/profile">
+                Profile
+              </MenuItem>
               <MenuItem onClick={logoutHandler}>Logout</MenuItem>
             </MenuList>
           </Menu>
