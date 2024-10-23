@@ -34,8 +34,8 @@ const LoginScreen = () => {
   const { loading, error, userInfo } = userLogin;
 
   useEffect(() => {
-   
-    if (userInfo && Object.keys(userInfo).length > 0) {
+    console.log('userInfo', userInfo)
+    if (userInfo) {
       navigate(redirect);
     }
   }, [userInfo, navigate, redirect]);
@@ -78,8 +78,8 @@ const LoginScreen = () => {
             Login
           </Button>
         </form>
-        <Flex  pt='10'>
-          <Text fontWeight='semibold'>
+        <Flex pt="10">
+          <Text fontWeight="semibold">
             New Customer?{" "}
             <Link as={RouterLink} to="/register">
               Click here for Register
