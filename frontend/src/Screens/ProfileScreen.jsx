@@ -13,9 +13,10 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { getUserDetail } from "../redux/actions/userAction";
+import { getUserDetail, updateUserProfile } from "../redux/actions/userAction";
 import FormContainer from "../Components/FormContainer";
 import Message from "../Components/Message";
+import { USER_DETAIL_RESET } from "../redux/contants/userContants";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -33,28 +34,35 @@ const ProfileScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { success, user: updatedUser } = userUpdateProfile;
+  debugger;
+
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
+    } else if (!user || !user.username) {
+      dispatch(getUserDetail());
+     
     } else {
-      if (!user.username) {
-        dispatch(getUserDetail());
-      } else {
-        // to pre-populate data (already data rakho)
-        setUsername(user.username);
-        setEmail(user.email);
-      }
+      setUsername(updatedUser.username || user.username);
+      setEmail(updatedUser.email || user.email);
+     
     }
-  }, [user, userInfo, navigate, dispatch]);
+  }, [userInfo, user, dispatch, navigate, success, updatedUser]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setMessage("Password do not match");
+      setMessage("Passwords do not match");
     } else {
-      // updata profile function dispatch
+      // dispatch update function
+      dispatch(updateUserProfile({ id: user._id, username, email, password }));
+
+      dispatch({ type: USER_DETAIL_RESET });
     }
   };
+
   return (
     <Grid templateColumns={{ sm: "1fr", md: "1fr 1fr" }} py="5" gap="10">
       <Flex w="full" alignItems="center" justifyContent="center" py="5">
