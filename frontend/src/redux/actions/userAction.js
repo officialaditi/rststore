@@ -16,6 +16,7 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
 } from "../contants/userContants";
+import { CART_RESET } from "../contants/cartContants";
 
 // login action
 
@@ -58,6 +59,8 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: USER_DETAIL_RESET });
   localStorage.removeItem("updatedUser");
   dispatch({ type: USER_UPDATE_PROFILE_RESET });
+  dispatch({type: CART_RESET})
+  localStorage.removeItem('cartItems');
 };
 
 /************************************************************************* */

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { saveShippingAddress } from "../redux/actions/cartAction";
 import FormContainer from "../Components/FormContainer";
 import countries from "../data/countries";
+import CheckoutSteps from "../Components/CheckoutSteps";
 
 const ShippingScreen = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const ShippingScreen = () => {
         <Heading as="h2" mb="8" fontSize="2xl">
           Shipping
         </Heading>
+        <CheckoutSteps step1 step2 />
         <form onSubmit={submitHandler}>
           {/* Address */}
           <FormControl id="address">
