@@ -56,11 +56,10 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT });
-  dispatch({ type: USER_DETAIL_RESET });
   localStorage.removeItem("updatedUser");
-  dispatch({ type: USER_UPDATE_PROFILE_RESET });
-  dispatch({type: CART_RESET})
-  localStorage.removeItem('cartItems');
+  dispatch({ type: USER_DETAIL_RESET });
+  localStorage.removeItem("cartItems");
+  dispatch({ type: CART_RESET });
 };
 
 /************************************************************************* */
