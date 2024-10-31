@@ -58,8 +58,10 @@ const PaymentScreen = () => {
               </HStack>
             </RadioGroup>
           </FormControl>
-          <Spacer h='3'/>
-          <Button type='sumbit' colorScheme="teal" mt='4'>Continue</Button>
+          <Spacer h="3" />
+          <Button type="sumbit" colorScheme="teal" mt="4">
+            Continue
+          </Button>
         </form>
       </FormContainer>
     </Flex>
