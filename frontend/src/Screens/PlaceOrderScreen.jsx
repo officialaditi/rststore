@@ -8,13 +8,16 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { createOrder } from "../redux/actions/orderAction";
 import { useDispatch, useSelector } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import CheckoutSteps from "../Components/CheckoutSteps";
 import Message from "../Components/Message";
 
 const placeOrderScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cart);
 
   cart.itemsPrice = cart.cartItems.reduce(
@@ -25,9 +28,28 @@ const placeOrderScreen = () => {
   cart.taxPrice = (28 * cart.itemsPrice) / 100;
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success } = orderCreate;
+
   const placeOrderHandler = () => {
-   alert('place order button clicked')
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    );
   };
+
+  useEffect(() => {
+    if (success) {
+      navigate(`/order/${order._id}`);
+    }
+  }, [order, navigate, success]);
   return (
     <Flex w="full" direction="column" py="5">
       <CheckoutSteps step1 step2 step3 step4 />
@@ -83,6 +105,7 @@ const placeOrderScreen = () => {
                         <Link
                           fontWeight="bold"
                           fontSize="xl"
+                          as={RouterLink}
                           to={`/products/${item.product}`}
                         >
                           {item.name}
