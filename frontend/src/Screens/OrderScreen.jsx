@@ -114,7 +114,7 @@ const OrderScreen = () => {
                         </Flex>
 
                         <Text fontSize="lg" fontWeight="semibold">
-                          {item.qty} x ₹{item.price} = ₹{+item.qty * item.price}
+                          {item.qty} x ${item.price} = ${+item.qty * item.price}
                         </Text>
                       </Flex>
                     ))}
