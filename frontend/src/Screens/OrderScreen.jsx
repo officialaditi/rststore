@@ -1,10 +1,12 @@
 import { Box, Flex, Grid, Heading, Image, Link, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { getOrderDetails } from "../redux/actions/orderAction";
+import { getOrderDetails, payOrder } from "../redux/actions/orderAction";
 import Loader from "../Components/Loader";
 import Message from "../Components/Message";
+import { ORDER_PAY_RESET } from "../redux/contants/orderContants";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
@@ -12,15 +14,29 @@ const OrderScreen = () => {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
+
+  const orderPay = useSelector((state) => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
+
   if (!loading) {
     order.itemsPrice = order.orderItems.reduce(
       (acc, currVal) => acc + currVal.price * +currVal.qty,
       0
     );
   }
+
   useEffect(() => {
-    dispatch(getOrderDetails(orderId));
-  }, [dispatch, orderId]);
+    dispatch({ type: ORDER_PAY_RESET });
+    if (!order.orderItems.length > 0 || successPay) {
+      dispatch({ type: ORDER_PAY_RESET });
+      dispatch(getOrderDetails(orderId));
+    }
+  }, [dispatch, orderId, order, successPay]);
+
+  const successPaymentHandler = (paymentResult) => {
+		dispatch(payOrder(orderId, paymentResult));
+	};
+
   return loading ? (
     <Loader />
   ) : error ? (
@@ -28,7 +44,7 @@ const OrderScreen = () => {
   ) : (
     <>
       <Flex w="full" py="5" direction="column">
-        <Grid templateColumns={{ base: "1fr", md: "2fr 1fr", lg: "3fr 2fr" }}>
+        <Grid templateColumns={{ base: "1fr", md: "1fr", lg: "3fr 2fr" }}>
           {/* column 1 */}
           <Flex direction="column">
             {/* shipping  */}
@@ -72,7 +88,9 @@ const OrderScreen = () => {
               </Text>
               <Text mt="4">
                 {order.isPaid ? (
-                  <Message type="success"> Paid On{order.paidAt}</Message>
+                  <Message type="success">
+                    Paid on {new Date(order.paidAt).toUTCString()}
+                  </Message>
                 ) : (
                   <Message type="warning">Not Paid</Message>
                 )}
@@ -131,7 +149,7 @@ const OrderScreen = () => {
             justifyContent="space-between"
             py="8"
             px="8"
-            m='10'
+            m="10"
             shadow="md"
             rounded="lg"
             borderColor="gray.300"
@@ -199,6 +217,48 @@ const OrderScreen = () => {
             </Box>
 
             {/* PAYMENT BUTTON */}
+            {!order.isPaid && (
+              <Box>
+                {loadingPay ? (
+                  <Loader />
+                ) : (
+                  <PayPalScriptProvider
+                    options={{
+                      clientId:
+                        "AZSnkiO2MNtgSIQ_uXZ7-Dnm8ybUUZ221Wade1Dd3U862WY5LOAN3Ehlp-4w7CGGuICRqC6XoKwmcokI",
+                      components: "buttons",
+                    }}
+                  >
+                    <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                value: order.totalPrice,
+                              },
+                            },
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        console.log("running before orderDetails onApprove");
+                        return actions.order.capture().then((details) => {
+                          console.log(details);
+                          const paymentResult = {
+                            id: details.id,
+                            status: details.status,
+                            update_time: details.update_time,
+                            email_address: details.payer.email_address,
+                          };
+                          successPaymentHandler(paymentResult);
+                        });
+                      }}
+                    />
+                  </PayPalScriptProvider>
+                )}
+              </Box>
+            )}
           </Flex>
         </Grid>
       </Flex>

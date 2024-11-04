@@ -53,6 +53,7 @@ const placeOrderScreen = () => {
   return (
     <Flex w="full" direction="column" py="5">
       <CheckoutSteps step1 step2 step3 step4 />
+
       <Grid templateColumns={{ base: "1fr", md: "3fr 2fr" }}>
         {/* column1 */}
         <Flex direction="column">
@@ -61,6 +62,7 @@ const placeOrderScreen = () => {
             <Heading as="h2" mb="3" fontSize="2xl" fontWeight="semibold">
               Shipping
             </Heading>
+
             <Text>
               <strong>Address: </strong>
               {cart.shippingAddress.address},{cart.shippingAddress.city},{" "}

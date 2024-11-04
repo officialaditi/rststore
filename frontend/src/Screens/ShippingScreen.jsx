@@ -41,7 +41,7 @@ const ShippingScreen = () => {
         <Heading as="h2" mb="8" fontSize="2xl">
           Shipping
         </Heading>
-        <CheckoutSteps step1 step2 />
+        <CheckoutSteps step1 step2  />
         <form onSubmit={submitHandler}>
           {/* Address */}
           <FormControl id="address">

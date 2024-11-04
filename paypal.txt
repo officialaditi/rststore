@@ -1,0 +1,30 @@
+ // step to intergate paypal into the app
+
+
+ 1) go to the developer.paypal.com and login with the paypal account we made 
+
+ 2) create 2 sandbox account (testing account)
+    -> 1) user
+    -> 2) merchant (admin)
+
+3) go to sandbox account create 2 accound 1) personal 2) business
+    1) personal account = make sure the country should be united state of america.(us)
+    2) business accound = country = us
+
+4) go to app and credential 
+    ===> click on create app
+         --> add app name anything (rststore)
+    ===> once we done with making app we will see the information like clintId etc
+
+5) after all the step now we have to install the module @paypal/react-paypal-js inside the FRONTEND
+
+6) when we making the app live open for production then only we have to make the change in the currency and to put it in india price we have write INR (in live production);
+
+for testing
+
+==> go to paypal personal account that we created 
+   PERSONAL account
+    --> click on the 3 dot and then click on view/edit
+    --> you will get the login info like email and password
+    --> using that email and password login once u click on paypal account u will get the screen were u have to add that email and password and click and login
+    --> once u login u will get the info and by default we have $5000 to use will testing
