@@ -1,7 +1,8 @@
 import express from "express";
-import protect from "../middlewares/authMiddleware.js";
+import { protect, admin } from "../middlewares/authMiddleware.js";
 import {
   getUserProfile,
+  getUsers,
   Login,
   registerUser,
   updateProfile,
@@ -9,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.route("/").post(registerUser);
+router.route("/").post(registerUser).get(protect, admin, getUsers);
 router.route("/login").post(Login);
 router
   .route("/profile")
