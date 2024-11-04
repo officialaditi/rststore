@@ -17,6 +17,10 @@ import {
   USER_UPDATE_PROFILE_FAIL,
 } from "../contants/userContants";
 import { CART_RESET } from "../contants/cartContants";
+import {
+  ORDER_MY_LIST_RESET,
+  ORDER_PAY_RESET,
+} from "../contants/orderContants";
 
 // login action
 
@@ -55,11 +59,16 @@ export const login = (email, password) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
-  dispatch({ type: USER_LOGOUT });
   localStorage.removeItem("updatedUser");
-  dispatch({ type: USER_DETAIL_RESET });
   localStorage.removeItem("cartItems");
+  localStorage.removeItem("shippingAddress");
+  localStorage.removeItem("paymentMethod");
   dispatch({ type: CART_RESET });
+  dispatch({ type: USER_LOGOUT });
+  dispatch({ type: USER_DETAIL_RESET });
+  dispatch({ type: ORDER_MY_LIST_RESET });
+  dispatch({ type: ORDER_PAY_RESET });
+  dispatch({ type: USER_UPDATE_PROFILE_RESET });
 };
 
 /************************************************************************* */
