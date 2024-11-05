@@ -1,25 +1,9 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  Table,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Icon, Table, Td, Th, Thead, Tr, Tbody } from "@chakra-ui/react";
 import { useEffect } from "react";
-import {
-  IoCheckmarkCircleSharp,
-  IoCloseCircleSharp,
-  IoPencilSharp,
-  IoTrashBinSharp,
-} from "react-icons/io5";
+import { IoCheckmarkCircleSharp, IoCloseCircleSharp, IoPencilSharp, IoTrashBinSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { listUsers } from "../redux/actions/userAction";
+import { listUsers, deleteUser } from "../redux/actions/userAction";
 import Loader from "../Components/Loader";
 import Message from "../Components/Message";
 
@@ -28,10 +12,13 @@ const UserListScreen = () => {
   const navigate = useNavigate();
 
   const userList = useSelector((state) => state.userList);
-  const { loading, error, users } = userList;
+  const { loading, error: listError, users } = userList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const userDelete = useSelector((state) => state.userDelete);
+  const { error: deleteError, success } = userDelete;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
@@ -39,28 +26,31 @@ const UserListScreen = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch, userInfo, navigate]);
+  }, [navigate, dispatch, success, userInfo]);
 
   const deleteHandler = (id) => {
-    // Delete
+    if (window.confirm("Are you sure?")) {
+      dispatch(deleteUser(id));
+    }
   };
+
   return (
     <>
-      <Heading as="h1" fontSize="3xl" mb="5">
-        Users
+      <Heading as="h1" fontSize="3xl" m="5" textAlign="center">
+        All User List
       </Heading>
       {loading ? (
         <Loader />
-      ) : error ? (
-        <Message type="error">{error}</Message>
+      ) : listError ? (
+        <Message type="error">{listError}</Message>
       ) : (
         <Box bgColor="white" rounded="lg" shadow="lg" px="5" py="5">
+          {deleteError && <Message type="error">{deleteError}</Message>}
           <Table variant="striped" colorScheme="gray" size="sm">
             <Thead>
               <Tr>
                 <Th>Id</Th>
                 <Th>Name</Th>
-                <Th>Email</Th>
                 <Th>Email</Th>
                 <Th>Admin</Th>
               </Tr>
@@ -75,19 +65,9 @@ const UserListScreen = () => {
                   </Td>
                   <Td>
                     {user.isAdmin ? (
-                      <Icon
-                        as={IoCheckmarkCircleSharp}
-                        color="green.600"
-                        w="8"
-                        h="8"
-                      />
+                      <Icon as={IoCheckmarkCircleSharp} color="green.600" w="8" h="8" />
                     ) : (
-                      <Icon
-                        as={IoCloseCircleSharp}
-                        color="red.600"
-                        w="8"
-                        h="8"
-                      />
+                      <Icon as={IoCloseCircleSharp} color="red.600" w="8" h="8" />
                     )}
                   </Td>
                   <Td>
@@ -103,9 +83,9 @@ const UserListScreen = () => {
                       <Button
                         mr="4"
                         colorScheme="red"
-                        onClick={deleteHandler(user._id)}
+                        onClick={() => deleteHandler(user._id)}
                       >
-                        <Icon as={IoTrashBinSharp} color="white" size="sm" />
+                        <Icon as={IoTrashBinSharp} color="white" size="lg" />
                       </Button>
                     </Flex>
                   </Td>
@@ -118,5 +98,4 @@ const UserListScreen = () => {
     </>
   );
 };
-
 export default UserListScreen;

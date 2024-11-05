@@ -122,4 +122,28 @@ const getUsers = asyncHandler(async(req, res) => {
   const users = await User.find({}).select('-password');
   res.json(users);
 })
-export { Login, getUserProfile, registerUser, updateProfile, getUsers };
+
+/////////////////////////////////////////////////////////
+/**
+ *  @desc       Delete User
+ *  @route      DELETE /api/users/:id
+ *  @access    private/admin
+ */
+const deleteUser = asyncHandler(async(req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    if (user._id.toString() === req.user.id) {
+      res.status(400);
+      throw new Error("Admins cannot delete their own account");
+    }
+    
+    await User.deleteOne(user);
+    res.json({ message: 'User Deleted' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+})
+
+export { Login, getUserProfile, registerUser, updateProfile, getUsers, deleteUser };

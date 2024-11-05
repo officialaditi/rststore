@@ -39,7 +39,7 @@ const App = () => {
             <Route path="/payment" element={<PaymentScreen />} />
             <Route path="/placeorder" element={<PlaceOrderScreen />} />
             <Route path="/order/:id" element={<OrderScreen />} />
-            <Route path="/admin/userList" element={<UserListScreen />} />
+            <Route path="/admin/userlist" element={<UserListScreen />} />
           </Routes>
         </Flex>
         <Footer />
