@@ -18,6 +18,7 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
+  USER_LIST_RESET,
 } from "../contants/userContants";
 import { CART_RESET } from "../contants/cartContants";
 import {
@@ -72,6 +73,7 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: ORDER_MY_LIST_RESET });
   dispatch({ type: ORDER_PAY_RESET });
   dispatch({ type: USER_UPDATE_PROFILE_RESET });
+  dispatch({ type: USER_LIST_RESET });
 };
 
 /************************************************************************* */
