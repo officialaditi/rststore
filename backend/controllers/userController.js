@@ -197,5 +197,6 @@ export {
   updateProfile,
   getUsers,
   deleteUser,
+  updateUser,
   getUserById,
 };
