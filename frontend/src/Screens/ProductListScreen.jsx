@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { IoAdd, IoPencilSharp, IoTrashBinSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { allProducts } from "../redux/actions/productAction";
+import { allProducts, deleteProduct } from "../redux/actions/productAction";
 import Loader from "../Components/Loader";
 import Message from "../Components/Message";
 
@@ -29,16 +29,26 @@ const ProductListScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: SuccessDelete,
+  } = productDelete;
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(allProducts());
     } else {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, SuccessDelete]);
 
   const deleteHandler = (id) => {
     // delete product
+    if (window.confirm("Are you Sure??")) {
+      dispatch(deleteProduct(id));
+    }
   };
   const createProductHandler = () => {
     // create product
@@ -52,13 +62,15 @@ const ProductListScreen = () => {
           Create Product
         </Button>
       </Flex>
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message type="error">{errorDelete}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
         <Message type="error">{error}</Message>
       ) : (
         <Box bgColor="white" rounded="lg" shadow="lg" px="5" py="5">
-          <Table variant='striped' colorScheme="gray" size="sm">
+          <Table variant="striped" colorScheme="gray" size="sm">
             <Thead>
               <Tr>
                 <Th>Id</Th>

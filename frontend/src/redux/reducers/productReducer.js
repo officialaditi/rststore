@@ -5,6 +5,9 @@ import {
   SINGLE_PRODUCT_REQUEST,
   SINGLE_PRODUCT_SUCCESS,
   SINGLE_PRODUCT_FAIL,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAIL,
 } from "../contants/productContants";
 
 /* ALL PRODUCT REDUCER */
@@ -34,6 +37,20 @@ export const singleProductReducer = (
     case SINGLE_PRODUCT_SUCCESS:
       return { loading: false, product: action.payload };
     case SINGLE_PRODUCT_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+/* DELETE PRODUCT BY ID */
+export const productDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_DELETE_REQUEST:
+      return { loading: true };
+    case PRODUCT_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    case PRODUCT_DELETE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
