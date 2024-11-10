@@ -15,9 +15,14 @@ import { useEffect } from "react";
 import { IoAdd, IoPencilSharp, IoTrashBinSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { allProducts, deleteProduct } from "../redux/actions/productAction";
+import {
+  allProducts,
+  deleteProduct,
+  createProduct,
+} from "../redux/actions/productAction";
 import Loader from "../Components/Loader";
 import Message from "../Components/Message";
+import { PRODUCT_CREATE_RESET } from "../redux/contants/productContants";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -36,22 +41,40 @@ const ProductListScreen = () => {
     success: SuccessDelete,
   } = productDelete;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: CreatedProduct,
+  } = productCreate;
+
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(allProducts());
-    } else {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo, SuccessDelete]);
+    if (successCreate) {
+      navigate(`/admin/product/${CreatedProduct._id}/edit`);
+    } else {
+      dispatch(allProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    userInfo,
+    SuccessDelete,
+    successCreate,
+    CreatedProduct,
+  ]);
 
   const deleteHandler = (id) => {
-    // delete product
     if (window.confirm("Are you Sure??")) {
       dispatch(deleteProduct(id));
     }
   };
   const createProductHandler = () => {
-    // create product
+    dispatch(createProduct());
   };
   return (
     <>
@@ -64,6 +87,8 @@ const ProductListScreen = () => {
       </Flex>
       {loadingDelete && <Loader />}
       {errorDelete && <Message type="error">{errorDelete}</Message>}
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message type="error">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (

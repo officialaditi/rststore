@@ -50,7 +50,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
    @access      private/ admin
 */
 
-const createProdut = asyncHandler(async (req, res) => {
+const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Sample Product",
     price: 0,
@@ -95,6 +95,6 @@ export {
   getProducts,
   getProductById,
   deleteProduct,
-  createProdut,
+  createProduct,
   updateProduct,
 };
