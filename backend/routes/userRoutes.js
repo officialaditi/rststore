@@ -8,7 +8,7 @@ import {
   registerUser,
   updateProfile,
   updateUser,
-  getUserById,
+  getUserByID,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -22,7 +22,7 @@ router
 router
   .route("/:id")
   .delete(protect, admin, deleteUser)
-  .get(protect, admin, getUserById)
+  .get(protect, admin, getUserByID)
   .put(protect, admin, updateUser);
 
 export default router;
