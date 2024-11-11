@@ -3,10 +3,10 @@ import { composeWithDevTools } from "@redux-devtools/extension";
 import { thunk } from "redux-thunk";
 import {
   allProductReducer,
-  productCreateReducer,
   productDeleteReducer,
-  productUpdateReducer,
   singleProductDetailsReducer,
+  productCreateReducer,
+  productUpdateReducer,
 } from "./redux/reducers/productReducer";
 import { cartReducer } from "./redux/reducers/cartReducer";
 import {

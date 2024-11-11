@@ -38,7 +38,7 @@ const ProductListScreen = () => {
   const {
     loading: loadingDelete,
     error: errorDelete,
-    success: SuccessDelete,
+    success: successDelete,
   } = productDelete;
 
   const productCreate = useSelector((state) => state.productCreate);
@@ -46,16 +46,17 @@ const ProductListScreen = () => {
     loading: loadingCreate,
     error: errorCreate,
     success: successCreate,
-    product: CreatedProduct,
+    product: createdProduct,
   } = productCreate;
 
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
+
     if (!userInfo.isAdmin) {
       navigate("/login");
     }
     if (successCreate) {
-      navigate(`/admin/product/${CreatedProduct._id}/edit`);
+      navigate(`/admin/product/${createdProduct._id}/edit`);
     } else {
       dispatch(allProducts());
     }
@@ -63,32 +64,40 @@ const ProductListScreen = () => {
     dispatch,
     navigate,
     userInfo,
-    SuccessDelete,
+    successDelete,
     successCreate,
-    CreatedProduct,
+    createdProduct,
   ]);
 
   const deleteHandler = (id) => {
-    if (window.confirm("Are you Sure??")) {
+    if (window.confirm("Are you sure?")) {
       dispatch(deleteProduct(id));
     }
   };
+
   const createProductHandler = () => {
     dispatch(createProduct());
   };
+
   return (
     <>
-      <Heading textAlign="center">All products List</Heading>
       <Flex mb="5" alignItems="center" justifyContent="space-between">
+        <Heading as="h1" fontSize="3xl" mb="5">
+          Product
+        </Heading>
         <Button onClick={createProductHandler} colorScheme="teal">
-          <Icon as={IoAdd} mr="2" fontSize="xl" fontWeight="bold" />
-          Create Product
+          <Icon as={IoAdd} mr="2" fontSize="xl" fontWeight="bold" /> Create
+          Product
         </Button>
       </Flex>
+
       {loadingDelete && <Loader />}
       {errorDelete && <Message type="error">{errorDelete}</Message>}
+
       {loadingCreate && <Loader />}
-      {errorCreate && <Message type="error">{errorCreate}</Message>}
+			{errorCreate && <Message type='error'>{errorCreate}</Message>}
+
+
       {loading ? (
         <Loader />
       ) : error ? (
@@ -98,22 +107,22 @@ const ProductListScreen = () => {
           <Table variant="striped" colorScheme="gray" size="sm">
             <Thead>
               <Tr>
-                <Th>Id</Th>
-                <Th>Name</Th>
-                <Th>Price</Th>
-                <Th>Category</Th>
-                <Th>Brand</Th>
+                <Th>ID</Th>
+                <Th>NAME</Th>
+                <Th>PRICE</Th>
+                <Th>CATEGORY</Th>
+                <Th>BRAND</Th>
                 <Th></Th>
               </Tr>
             </Thead>
             <Tbody>
               {products.map((product) => (
                 <Tr key={product._id}>
-                  <Th>{product._id}</Th>
-                  <Th>{product.name}</Th>
-                  <Th>{product.price}</Th>
-                  <Th>{product.category}</Th>
-                  <Th>{product.brand}</Th>
+                  <Td>{product._id}</Td>
+                  <Td>{product.name}</Td>
+                  <Td>{product.price}</Td>
+                  <Td>{product.category}</Td>
+                  <Td>{product.brand}</Td>
                   <Td>
                     <Flex justifyContent="flex-end" alignItems="center">
                       <Button
@@ -122,16 +131,14 @@ const ProductListScreen = () => {
                         to={`/admin/product/${product._id}/edit`}
                         colorScheme="teal"
                       >
-                        <Icon as={IoPencilSharp} color="white" />
+                        <Icon as={IoPencilSharp} color="white" size="sm" />
                       </Button>
                       <Button
                         mr="4"
                         colorScheme="red"
-                        onClick={() => {
-                          deleteHandler(product._id);
-                        }}
+                        onClick={() => deleteHandler(product._id)}
                       >
-                        <IoTrashBinSharp color="white" />
+                        <Icon as={IoTrashBinSharp} color="white" size="sm" />
                       </Button>
                     </Flex>
                   </Td>
@@ -144,4 +151,5 @@ const ProductListScreen = () => {
     </>
   );
 };
+
 export default ProductListScreen;

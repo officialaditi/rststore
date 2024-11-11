@@ -8,7 +8,7 @@ import {
   Link,
   Spacer,
 } from "@chakra-ui/react";
-
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
@@ -17,13 +17,10 @@ import FormContainer from "../Components/FormContainer";
 import Loader from "../Components/Loader";
 import Message from "../Components/Message";
 import { PRODUCT_UPDATE_RESET } from "../redux/contants/productContants";
-
 const ProductEditScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { id: productId } = useParams();
-
   const [name, setName] = useState("");
   const [price, setPrice] = useState("0");
   const [image, setImage] = useState("");
@@ -31,19 +28,16 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [countInStock, setCountInStock] = useState("");
-
   const singleProductDetails = useSelector(
     (state) => state.singleProductDetails
   );
   const { loading, product, error } = singleProductDetails;
-
   const productUpdate = useSelector((state) => state.productUpdate);
   const {
     loading: loadingUpdate,
     error: errorUpdate,
     success: successUpdate,
   } = productUpdate;
-
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
@@ -62,7 +56,6 @@ const ProductEditScreen = () => {
       }
     }
   }, [navigate, dispatch, successUpdate, singleProduct, productId, product]);
-
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -79,21 +72,37 @@ const ProductEditScreen = () => {
     );
   };
 
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post(`/api/uploads`, formData, config);
+      setImage(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <Link as={RouterLink} to="/admin/productlist">
         <Button colorScheme="teal"> Go Back</Button>
       </Link>
-
       <Flex w="full" alignItems="center" justifyContent="center" py="5">
         <FormContainer>
           <Heading as="h1" mb="8" fontSize="3xl">
             Edit Product
           </Heading>
-
           {loadingUpdate && <Loader />}
           {errorUpdate && <Message type="error">{errorUpdate}</Message>}
-
           {loading ? (
             <Loader />
           ) : error ? (
@@ -111,7 +120,6 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
-
               {/* PRICE */}
               <FormControl id="price" isRequired>
                 <FormLabel>Price</FormLabel>
@@ -123,7 +131,6 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
-
               {/* IMAGE */}
               <FormControl id="image" isRequired>
                 <FormLabel>Image</FormLabel>
@@ -133,9 +140,9 @@ const ProductEditScreen = () => {
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                 />
+                <Input type="file" onChange={uploadFileHandler} />
               </FormControl>
               <Spacer h="3" />
-
               {/* DESCRIPTION */}
               <FormControl id="description" isRequired>
                 <FormLabel>Description</FormLabel>
@@ -147,7 +154,6 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
-
               {/* BRAND */}
               <FormControl id="brand" isRequired>
                 <FormLabel>Brand</FormLabel>
@@ -159,7 +165,6 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
-
               {/* CATEGORY */}
               <FormControl id="category" isRequired>
                 <FormLabel>Category</FormLabel>
@@ -171,7 +176,6 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
-
               {/* COUNT IN STOCK */}
               <FormControl id="countInStock" isRequired>
                 <FormLabel>Count In Stock</FormLabel>
@@ -183,7 +187,6 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
-
               <Button
                 type="submit"
                 isLoading={loading}
