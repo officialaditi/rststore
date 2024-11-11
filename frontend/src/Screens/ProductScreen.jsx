@@ -27,8 +27,10 @@ const ProductScreen = () => {
 
   const [qty, setQty] = useState(1);
 
-  const singleProductDetail = useSelector((state) => state.singleProductDetail);
-  const { loading, product, error } = singleProductDetail;
+  const singleProductDetails = useSelector(
+    (state) => state.singleProductDetails
+  );
+  const { loading, product, error } = singleProductDetails;
 
   useEffect(() => {
     dispatch(singleProduct(id));
