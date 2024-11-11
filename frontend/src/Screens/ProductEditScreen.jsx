@@ -8,6 +8,7 @@ import {
   Link,
   Spacer,
 } from "@chakra-ui/react";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
@@ -77,10 +78,11 @@ const ProductEditScreen = () => {
       })
     );
   };
+
   return (
     <>
       <Link as={RouterLink} to="/admin/productlist">
-       <Button colorScheme="teal"> Go Back</Button>
+        <Button colorScheme="teal"> Go Back</Button>
       </Link>
 
       <Flex w="full" alignItems="center" justifyContent="center" py="5">
