@@ -12,32 +12,38 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
-import { updateProduct, singleProduct } from "../redux/actions/productAction";
+import { singleProduct, updateProduct } from "../redux/actions/productAction";
 import FormContainer from "../Components/FormContainer";
 import Loader from "../Components/Loader";
 import Message from "../Components/Message";
 import { PRODUCT_UPDATE_RESET } from "../redux/contants/productContants";
+
 const ProductEditScreen = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { id: productId } = useParams();
+
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("0");
+  const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [countInStock, setCountInStock] = useState("");
+
   const singleProductDetails = useSelector(
     (state) => state.singleProductDetails
   );
-  const { loading, product, error } = singleProductDetails;
+  const { loading, error, product } = singleProductDetails;
+
   const productUpdate = useSelector((state) => state.productUpdate);
   const {
     loading: loadingUpdate,
     error: errorUpdate,
     success: successUpdate,
   } = productUpdate;
+
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
@@ -55,17 +61,19 @@ const ProductEditScreen = () => {
         setDescription(product.description);
       }
     }
-  }, [navigate, dispatch, successUpdate, singleProduct, productId, product]);
+  }, [dispatch, navigate, productId, product, successUpdate]);
+
   const submitHandler = (e) => {
     e.preventDefault();
+
     dispatch(
       updateProduct({
         _id: productId,
         name,
         price,
+        image,
         brand,
         category,
-        image,
         description,
         countInStock,
       })
@@ -94,15 +102,18 @@ const ProductEditScreen = () => {
   return (
     <>
       <Link as={RouterLink} to="/admin/productlist">
-        <Button colorScheme="teal"> Go Back</Button>
+        Go Back
       </Link>
+
       <Flex w="full" alignItems="center" justifyContent="center" py="5">
         <FormContainer>
           <Heading as="h1" mb="8" fontSize="3xl">
             Edit Product
           </Heading>
+
           {loadingUpdate && <Loader />}
           {errorUpdate && <Message type="error">{errorUpdate}</Message>}
+
           {loading ? (
             <Loader />
           ) : error ? (
@@ -120,6 +131,7 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
+
               {/* PRICE */}
               <FormControl id="price" isRequired>
                 <FormLabel>Price</FormLabel>
@@ -131,6 +143,7 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
+
               {/* IMAGE */}
               <FormControl id="image" isRequired>
                 <FormLabel>Image</FormLabel>
@@ -143,6 +156,7 @@ const ProductEditScreen = () => {
                 <Input type="file" onChange={uploadFileHandler} />
               </FormControl>
               <Spacer h="3" />
+
               {/* DESCRIPTION */}
               <FormControl id="description" isRequired>
                 <FormLabel>Description</FormLabel>
@@ -154,6 +168,7 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
+
               {/* BRAND */}
               <FormControl id="brand" isRequired>
                 <FormLabel>Brand</FormLabel>
@@ -165,6 +180,7 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
+
               {/* CATEGORY */}
               <FormControl id="category" isRequired>
                 <FormLabel>Category</FormLabel>
@@ -176,6 +192,7 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
+
               {/* COUNT IN STOCK */}
               <FormControl id="countInStock" isRequired>
                 <FormLabel>Count In Stock</FormLabel>
@@ -187,6 +204,7 @@ const ProductEditScreen = () => {
                 />
               </FormControl>
               <Spacer h="3" />
+
               <Button
                 type="submit"
                 isLoading={loading}
@@ -202,4 +220,5 @@ const ProductEditScreen = () => {
     </>
   );
 };
+
 export default ProductEditScreen;
