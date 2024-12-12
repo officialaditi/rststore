@@ -1,0 +1,9 @@
+to add file on different branch use this:-
+
+1) git checkout -b (name of the branch);
+
+2) git add .
+
+3) git commit -m 'msg or commit'
+
+4) git push --set-upstream origin (name of branch);
